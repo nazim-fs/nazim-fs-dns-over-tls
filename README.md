@@ -15,6 +15,10 @@ This DNS over TLS proxy implementation offers secure and efficient DNS resolutio
    - Works over TCP and UDP, providing secure DNS resolution over TCP while handling UDP requests.
 3. Rate Limiting, Caching, and Logging:
    - Implements rate limiting to prevent abuse, caching for improved performance, and detailed logging for monitoring and debugging.
+4. Security considerations while writing docker setup:
+   - Used a slim base image like `python:3.9-slim` to minimize potential vulnerabilities and to reduce the attack surface by including only essential components required to run the application.
+   - Running the application as a non-root user (`proxyuser`) to enhance security by limiting the potential impact of security breaches.
+   - The COPY `--chown=proxyuser:proxyuser` command ensures that the `encrypted_dns_proxy.py` file is owned by the proxyuser user and group within the container.
 
 
 ## Additional queries:
@@ -45,7 +49,7 @@ To successfully deploy the proxy, the following pre-requisites must be satisfied
 
 - port `35353` availability.
 - `docker` installed on the machine.
-- Utilities such as `ncat`, `nslookup`, `tcpdump`, `dig` to be available & intalled on the machine to test or troubleshoot the proxy issues.
+- Utilities such as `ncat`, `nslookup`, `tcpdump`, `dig` to be available & installed on the machine to test or troubleshoot the proxy issues.
 - `make` utility.
 
 
@@ -59,12 +63,17 @@ make deploy
 
 ## Testing Procedure:
 
-Upon successful deployment, you may use tools such as `nslookup`, `host`, `dig` as below to test the proxy:
+- Upon successful deployment, you may use tools such as `nslookup`, `host`, `dig` as below to test the proxy:
 ```
 nslookup -port=35353 -type=A -vc google.com localhost
 dig @localhost -p 35353 +tcp google.com
 echo -n "google.com" | ncat localhost 35353
 host -T -p 35353 google.com localhost
+```
+- In addition, you can also get into the proxy container & view the DNS logs inside `dns_proxy.log` file:
+```
+docker exec -it encrypted_dns_proxy_container /bin/bash
+cat dns_proxy.log
 ```
 
 
@@ -92,6 +101,7 @@ $ docker inspect --format='{{json .NetworkSettings.Ports}}' encrypted_dns_proxy_
 $ openssl s_client -connect localhost:35353
 $ sudo tcpdump -i any udp port 35353
 $ sudo tcpdump -i any tcp port 35353
+$ sudo netstat -ntlp | grep -i listen
 ```
 
 
