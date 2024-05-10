@@ -8,35 +8,35 @@ This DNS over TLS proxy implementation offers secure and efficient DNS resolutio
 ## Implementation & Achievements:
 
 1. DNS Query Handling:
-- Handles DNS queries and responds to both UDP and TCP clients.
-- Establishes a secure TCP connection with Cloudflare's DoT server for DNS resolution.
-- Implements rate limiting, caching, and logging functionalities.
+   - Handles DNS queries and responds to both UDP and TCP clients.
+   - Establishes a secure TCP connection with Cloudflare's DoT server for DNS resolution.
+   - Implements rate limiting, caching, and logging functionalities.
 2. Multi-protocol Support:
-- Works over TCP and UDP, providing secure DNS resolution over TCP while handling UDP requests.
+   - Works over TCP and UDP, providing secure DNS resolution over TCP while handling UDP requests.
 3. Rate Limiting, Caching, and Logging:
-- Implements rate limiting to prevent abuse, caching for improved performance, and detailed logging for monitoring and debugging.
+   - Implements rate limiting to prevent abuse, caching for improved performance, and detailed logging for monitoring and debugging.
 
 
 ## Additional queries:
 
 ### Imagine this proxy being deployed in an infrastructure. What would be the security concerns you would raise?
--> This setup acknoweldges the fact that its not perfect, hence it also acknoweldges following security concerns associated with it:
-- Making sure our communications are secure, like using encryption so no one can spy on what we're doing.
-- Keeping an eye on how much traffic we're getting and slow things down if it gets too much.
-- Keeping everything updated so we're protected from known issues.
+- This setup acknoweldges the fact that its not perfect, hence it also acknoweldges following security concerns associated with it:
+   - Making sure our communications are secure, like using encryption so no one can spy on what we're doing.
+   - Keeping an eye on how much traffic we're getting and slow things down if it gets too much.
+   - Keeping everything updated so we're protected from known issues.
 
 ### How would you integrate that solution in a distributed, microservices-oriented and containerized architecture?
--> There are various ways to integrate this solution in a distributed architecture, such as below:
-- Since proxy is already containerized, it's easy to move around and manage it, especially if we're using any container orchestration tools such as Kubernetes.
-- Spreading out the work evenly using utilties such as load balancing, so not one server gets overloaded.
-- Making sure we can add more servers quickly if we need to handle more traffic.
+- There are various ways to integrate this solution in a distributed architecture, such as below:
+  - Since proxy is already containerized, it's easy to move around and manage it, especially if we're using any container orchestration tools such as Kubernetes.
+  - Spreading out the work evenly using utilties such as load balancing, so not one server gets overloaded.
+  - Making sure we can add more servers quickly if we need to handle more traffic.
 
 ### What other improvements do you think would be interesting to add to the project?
--> There is still a room for an improvements in this setup, such as below to name a few:
-- Adding support for DNS filtering and blocking of malicious domains or unwanted content.
-- Integrating metrics and monitoring tools to gather performance data and monitoring the health of the DNS proxy.
-- Handling cases when our main server is down.
-- Making it easy to change settings without touching code.
+- There is still a room for an improvements in this setup, such as below to name a few:
+  - Adding support for DNS filtering and blocking of malicious domains or unwanted content.
+  - Integrating metrics and monitoring tools to gather performance data and monitoring the health of the DNS proxy.
+  - Handling cases when our main server is down.
+  - Making it easy to change settings without touching code.
 
 
 ## Pre-requisites:
