@@ -3,32 +3,25 @@ import ssl
 import threading
 import time
 
-# Cloudflare as DOT server
 upstream_dns_server = ('1.1.1.1', 853)
 listening_address = '0.0.0.0'
 listening_port = 53
 
-# Cache for DNS responses
-dns_cache = {}
-
-# Rate limiting parameters in seconds
-max_requests = 10
-request_window = 60
-
-# Logging function to log messages inside `dns_proxy.log` file
 def log_message(message, client_address=None, protocol='UDP'):
     timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
     log_str = f"[{timestamp}] {protocol} Request from {client_address}: {message}"
     with open('dns_proxy.log', 'a') as log_file:
         log_file.write(f'{log_str}\n')
 
+max_requests = 10
+request_window = 60
+dns_cache = {}
+
 def handle_dns_query(query_data):
-    # Check cache for response
     if query_data in dns_cache:
         log_message(f"Cache hit: {query_data}")
         return dns_cache[query_data]
 
-    # Rate limiting check
     global last_request_time, request_count
     current_time = time.time()
     if current_time - last_request_time > request_window:
@@ -42,7 +35,6 @@ def handle_dns_query(query_data):
     request_count += 1
     log_message(f"Handling DNS query: {query_data}")
 
-    # A new TLS connection to the CF DOT server
     context = ssl.create_default_context()
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as tls_socket:
         tls_socket = context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM), server_hostname=upstream_dns_server[0])
@@ -50,7 +42,6 @@ def handle_dns_query(query_data):
         tls_socket.sendall(query_data)
         response = tls_socket.recv(1024)
 
-        # Update cache
         dns_cache[query_data] = response
 
     return response
@@ -76,16 +67,13 @@ def main():
     last_request_time = time.time()
     request_count = 0
 
-    # A UDP socket creation to listen for DNS queries
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp_socket.bind((listening_address, listening_port))
 
-    # A TCP socket creation to handle DNS queries over TCP
     tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcp_socket.bind((listening_address, listening_port))
     tcp_socket.listen(5)
 
-    # A separate threads to start UDP and TCP handlers in
     udp_thread = threading.Thread(target=handle_udp, args=(udp_socket,))
     tcp_thread = threading.Thread(target=handle_tcp, args=(tcp_socket,))
     udp_thread.start()
