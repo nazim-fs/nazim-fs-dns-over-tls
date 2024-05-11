@@ -6,7 +6,7 @@ import time
 # Cloudflare as DOT server
 upstream_dns_server = ('1.1.1.1', 853)
 listening_address = '0.0.0.0'
-listening_port = 35353
+listening_port = 53
 
 # Cache for DNS responses
 dns_cache = {}

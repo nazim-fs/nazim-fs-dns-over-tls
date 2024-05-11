@@ -6,7 +6,7 @@ USER proxyuser
 WORKDIR /app
 COPY --chown=proxyuser:proxyuser encrypted_dns_proxy.py .
 
-EXPOSE 35353/udp
-EXPOSE 35353/tcp
+EXPOSE 53/udp
+EXPOSE 53/tcp
 
 CMD ["python", "encrypted_dns_proxy.py"]

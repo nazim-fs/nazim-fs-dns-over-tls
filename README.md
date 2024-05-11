@@ -8,7 +8,7 @@ This DNS over TLS proxy implementation offers secure and efficient DNS resolutio
 ## Implementation & Achievements:
 
 1. DNS Query Handling:
-   - Handles DNS queries and responds to both UDP and TCP clients.
+   - Handles DNS queries on port `53` and responds to both UDP and TCP clients.
    - Establishes a secure TCP connection with Cloudflare's DoT server for DNS resolution.
    - Implements rate limiting, caching, and logging functionalities.
 2. Multi-protocol Support:
@@ -47,7 +47,7 @@ This DNS over TLS proxy implementation offers secure and efficient DNS resolutio
 
 To successfully deploy the proxy, the following pre-requisites must be satisfied:
 
-- port `35353` availability.
+- port `35353` availability on the machine.
 - `docker` installed on the machine.
 - Utilities such as `ncat`, `nslookup`, `tcpdump`, `dig` to be available & installed on the machine to test or troubleshoot the proxy issues.
 - `make` utility.
